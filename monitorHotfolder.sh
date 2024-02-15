@@ -24,11 +24,19 @@ else
   case $1 in
 
     "restartTom")
-      silentRestartTom
+      systemctl restart tomcat9.service
+      ;;
+
+    "silentRestartTom")
+      systemctl restart tomcat9.service >/dev/null 2>&1
       ;;
 
     "importChanged")
-      silentImportChanged
+      /usr/bin/php /opt/digiverso/kult_dma_object_importer/run.php required
+      ;;
+
+    "silentImportChanged")
+      /usr/bin/php /opt/digiverso/kult_dma_object_importer/run.php required  >/dev/null 2>&1
       ;;
 
     *)
