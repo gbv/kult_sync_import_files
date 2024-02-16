@@ -60,4 +60,4 @@ body=$body"End Time: "$endTime"</p>"
 # For HTML emails, add the following line
 MIME="MIME-Version: 1.0\nContent-Type: text/html\n"
 
-echo -e "To: $recipient\nFrom: $sender\nSubject: $subject\n$MIME\n\n$body" | sendmail -t
+echo -e "To: $recipient\nFrom: $sender\nSubject: $subject\n$MIME\n\n$body" | /usr/sbin/sendmail -t
