@@ -11,7 +11,7 @@ countChanged=0
 countNew=0
 countImportFiles=`find $importFilePath -type f -print | wc -l`
 
-if [ "$countImportFiles" -gt 0 ] 
+if [ "$countImportFiles" -gt 0 ]
 then
 # for each import file
 for currentFile in $importFilePath$importFiles
@@ -25,15 +25,15 @@ do
   indexedFile=$indexedFilesPath$currentFileName
 
   # check if indexed files exists
-  if test -f "$indexedFile" 
-  then  
+  if test -f "$indexedFile"
+  then
      echo "-- Indexed file exists." >> $logFile
     # check if import and index file are from the same size
-    if $indexedFileExists cmp -s "$currentFile" "$indexedFile" 
+    if $indexedFileExists cmp -s "$currentFile" "$indexedFile"
     then
       let countUnchanged++
       # we do not need the same files and want to clear the import from them
-      echo "---- No differences detected." >> $logFile   
+      echo "---- No differences detected." >> $logFile
       # delete the import file and its media directory
       echo "---- Delete import file and its media directory."  >> $logFile
       echo $(rm -v $currentFile)  >> $logFile
@@ -49,12 +49,12 @@ do
   fi
 done
 fi
-# write report  
+# write report
 echo "---------------------------------" >> $logFile
-echo "Files in Coldfolder: "$countImportFiles >> $logFile  
-echo "Checked Importfiles: "$countAll >> $logFile  
-echo "Unchanged:           "$countUnchanged >> $logFile  
-echo "Changed:             "$countChanged >> $logFile  
+echo "Files in Coldfolder: "$countImportFiles >> $logFile
+echo "Checked Importfiles: "$countAll >> $logFile
+echo "Unchanged:           "$countUnchanged >> $logFile
+echo "Changed:             "$countChanged >> $logFile
 echo "New:                 "$countNew >> $logFile
 
 #send email report
@@ -70,4 +70,4 @@ body=$body"New:                 "$countNew"</p>"
 # For HTML emails, add the following line
 MIME="MIME-Version: 1.0\nContent-Type: text/html\n"
 
-echo -e "To: $recipient\nFrom: $sender\nSubject: $subject\n$MIME\n\n$body" | sendmail -t
+echo -e "To: $recipient\nFrom: $sender\nSubject: $subject\n$MIME\n\n$body" | /usr/sbin/sendmail -t
