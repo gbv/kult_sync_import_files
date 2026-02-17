@@ -1,26 +1,30 @@
 #!/bin/bash
+set -a
+source "$SCRIPT_DIR/.env"
+set +a
+
 startTime=$(date +"%Y-%m-%d_%H-%M-%S")
-logFile="/opt/digiverso/kult_sync_import_files/logs/synchronized."$startTime".log"
+logFile=$PATH_LOGFILE"synchronized."$startTime".log"
 importFiles="*.xml"
-importFilePath="/opt/digiverso/viewer/coldfolder/"
-indexedFilesPath="/opt/digiverso/viewer/orig_denkxweb/"
+exportFilePath="$PATH_EXPORTED"
+indexedFilesPath="$PATH_INDEXED"
 
 countAll=0
 countUnchanged=0
 countChanged=0
 countNew=0
-countImportFiles=`find $importFilePath -type f -print | wc -l`
+countImportFiles=`find $exportFilePath -type f -print | wc -l`
 
 if [ "$countImportFiles" -gt 0 ]
 then
 # for each import file
-for currentFile in $importFilePath$importFiles
+for currentFile in $exportFilePath$importFiles
 do
   let countAll++
   echo -ne $countAll'/'$countImportFiles'\r'
   currentFileName=$(basename $currentFile)
   currentObjectID=$(basename $currentFile .xml)
-  currentMediaDirectory=$importFilePath$currentObjectID"_downloadimages"
+  currentMediaDirectory=$exportFilePath$currentObjectID"_media"
   echo $currentFileName >> $logFile
   indexedFile=$indexedFilesPath$currentFileName
 
@@ -58,9 +62,9 @@ echo "Changed:             "$countChanged >> $logFile
 echo "New:                 "$countNew >> $logFile
 
 #send email report
-recipient="goobi-viewer-support@lists.gbv.de"
-sender="no-reply@gbv.de"
-subject="[goobi-viewer] [Denkmalatlas] WFS Import Status"
+recipient="$MAIL_TO"
+sender="$MAIL_FROM"
+subject="[Denkmalatlas] Sync Status"
 body="<p>Files in Coldfolder: "$countImportFiles"</br>"
 body=$body"Checked Importfiles: "$countAll"</br>"
 body=$body"Unchanged:           "$countUnchanged"</br>"
