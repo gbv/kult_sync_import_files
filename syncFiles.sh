@@ -46,8 +46,11 @@ do
       echo $(rm -v -rf $currentMediaDirectory)  >> $logFile
     else
       let countChanged++
-      echo "---- Differences detected." >> $logFile
-      echo $(diff $indexedFile $currentFile) >> $logFile
+      echo "---- Differences detected." >> "$logFile"
+      echo "----   Indexed file: $(basename "$indexedFile")" >> "$logFile"
+      echo "----   Imported file: $(basename "$currentFile")" >> "$logFile"
+      echo "----   Unified diff:" >> "$logFile"
+      diff -u --label "indexed:$(basename "$indexedFile")" --label "import:$(basename "$currentFile")" "$indexedFile" "$currentFile" >> "$logFile" || true
     fi
   else
     let countNew++
